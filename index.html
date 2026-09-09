@@ -7,11 +7,13 @@
     <title>Portal de Operações | infor.dados</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
     <script>
         // Carrega o tema imediatamente para evitar qualquer piscada de cor (FOUC)
-        (function() {
+        (function () {
             try {
                 const salvo = localStorage.getItem('infor_dados_tema');
                 if (salvo) {
@@ -34,7 +36,7 @@
                         }
                     }
                 }
-            } catch (e) {}
+            } catch (e) { }
         })();
     </script>
 
@@ -109,7 +111,7 @@
             padding: 6px 16px;
             border-radius: 9999px;
             border: 1px solid #e2e8f0;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
         }
 
         .controle-tema-label {
@@ -149,14 +151,14 @@
 
         .btn-tema:hover {
             transform: scale(1.22);
-            box-shadow: 0 0 0 2px var(--cor-primaria), 0 3px 8px rgba(0,0,0,0.2) !important;
+            box-shadow: 0 0 0 2px var(--cor-primaria), 0 3px 8px rgba(0, 0, 0, 0.2) !important;
             background-color: initial !important;
             color: initial !important;
         }
 
         .btn-tema.ativo {
             transform: scale(1.18);
-            box-shadow: 0 0 0 2px #0f172a, 0 0 10px rgba(0,0,0,0.35) !important;
+            box-shadow: 0 0 0 2px #0f172a, 0 0 10px rgba(0, 0, 0, 0.35) !important;
         }
 
         .btn-tema.ativo::after {
@@ -165,7 +167,7 @@
             font-size: 12px;
             font-weight: 800;
             line-height: 1;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
         }
 
         /* Seletor Customizado (Color Picker) */
@@ -193,12 +195,12 @@
 
         .btn-custom-cor:hover {
             transform: scale(1.22);
-            box-shadow: 0 0 0 2px var(--cor-primaria), 0 3px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 0 0 2px var(--cor-primaria), 0 3px 8px rgba(0, 0, 0, 0.2);
         }
 
         .btn-custom-cor.ativo {
             transform: scale(1.18);
-            box-shadow: 0 0 0 2px #0f172a, 0 0 10px rgba(0,0,0,0.35);
+            box-shadow: 0 0 0 2px #0f172a, 0 0 10px rgba(0, 0, 0, 0.35);
         }
 
         .btn-custom-cor.ativo::after {
@@ -207,7 +209,7 @@
             font-size: 13px;
             font-weight: 900;
             line-height: 1;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
             pointer-events: none;
             position: absolute;
         }
@@ -436,25 +438,34 @@
 
             <!-- CONTROLE DE CORES / TEMAS -->
             <div class="controle-tema">
-                <span class="controle-tema-label">🎨 Cores</span>
+                <span class="controle-tema-label"></span>
                 <div class="lista-paletas">
-                    <button type="button" class="btn-tema ativo" data-tema="verde" title="Verde Esmeralda (Padrão)" style="background-color: #00a859;" onclick="selecionarTema('verde')"></button>
-                    <button type="button" class="btn-tema" data-tema="azul" title="Azul Cibernético" style="background-color: #0070f3;" onclick="selecionarTema('azul')"></button>
-                    <button type="button" class="btn-tema" data-tema="roxo" title="Roxo Cyberpunk" style="background-color: #8b5cf6;" onclick="selecionarTema('roxo')"></button>
-                    <button type="button" class="btn-tema" data-tema="laranja" title="Laranja Sunset" style="background-color: #f97316;" onclick="selecionarTema('laranja')"></button>
-                    <button type="button" class="btn-tema" data-tema="vermelho" title="Vermelho Carmim" style="background-color: #ef4444;" onclick="selecionarTema('vermelho')"></button>
-                    <button type="button" class="btn-tema" data-tema="ciano" title="Ciano Matrix" style="background-color: #06b6d4;" onclick="selecionarTema('ciano')"></button>
-                    <button type="button" class="btn-tema" data-tema="dourado" title="Dourado Cyber" style="background-color: #eab308;" onclick="selecionarTema('dourado')"></button>
+                    <button type="button" class="btn-tema ativo" data-tema="verde" title="Verde Esmeralda (Padrão)"
+                        style="background-color: #00a859;" onclick="selecionarTema('verde')"></button>
+                    <button type="button" class="btn-tema" data-tema="azul" title="Azul Cibernético"
+                        style="background-color: #0070f3;" onclick="selecionarTema('azul')"></button>
+                    <button type="button" class="btn-tema" data-tema="roxo" title="Roxo Cyberpunk"
+                        style="background-color: #8b5cf6;" onclick="selecionarTema('roxo')"></button>
+                    <button type="button" class="btn-tema" data-tema="laranja" title="Laranja Sunset"
+                        style="background-color: #f97316;" onclick="selecionarTema('laranja')"></button>
+                    <button type="button" class="btn-tema" data-tema="vermelho" title="Vermelho Carmim"
+                        style="background-color: #ef4444;" onclick="selecionarTema('vermelho')"></button>
+                    <button type="button" class="btn-tema" data-tema="ciano" title="Ciano Matrix"
+                        style="background-color: #06b6d4;" onclick="selecionarTema('ciano')"></button>
+                    <button type="button" class="btn-tema" data-tema="dourado" title="Dourado Cyber"
+                        style="background-color: #eab308;" onclick="selecionarTema('dourado')"></button>
 
                     <!-- Seletor de Qualquer Cor (Color Picker) -->
                     <div class="seletor-custom-wrapper" title="Escolha qualquer cor personalizada">
                         <div class="btn-custom-cor" id="btnCustomCor">
-                            <input type="color" id="inputCorCustom" onchange="selecionarCorLivre(this.value)" oninput="selecionarCorLivre(this.value)" value="#00a859">
+                            <input type="color" id="inputCorCustom" onchange="selecionarCorLivre(this.value)"
+                                oninput="selecionarCorLivre(this.value)" value="#00a859">
                         </div>
                     </div>
 
                     <!-- Botão Reset -->
-                    <button type="button" class="btn-reset-tema" title="Restaurar cor padrão" onclick="selecionarTema('verde')">↺</button>
+                    <button type="button" class="btn-reset-tema" title="Restaurar cor padrão"
+                        onclick="selecionarTema('verde')">↺</button>
                 </div>
             </div>
         </div>
@@ -985,7 +996,7 @@ Endereço de instalação:`
                         return;
                     }
                 }
-            } catch (e) {}
+            } catch (e) { }
 
             // Padrão: Verde Esmeralda
             selecionarTema('verde', false);
