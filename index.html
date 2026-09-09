@@ -1087,8 +1087,10 @@
             <!-- Painel: Checklist -->
             <div class="janela-anotacoes-body painel-checklist" id="painelChecklistNota" style="padding:0; overflow:hidden;">
                 <div class="checklist-adicionar">
-                    <input type="text" id="inputNovaTask" placeholder="Nova tarefa... (Enter para adicionar)" maxlength="200"
-                        onkeydown="if(event.key==='Enter') adicionarTaskChecklist()">
+                    <input type="text" id="inputNovaTask"
+                        placeholder="Cole uma lista ou digite e pressione Enter..."
+                        onkeydown="if(event.key==='Enter') adicionarTaskChecklist()"
+                        onpaste="onColarTaskChecklist(event)">
                     <button type="button" onclick="adicionarTaskChecklist()" title="Adicionar tarefa">+</button>
                 </div>
                 <div class="checklist-lista" id="listaChecklist">
@@ -1853,13 +1855,74 @@ Endereço de instalação:`
             atualizarContagemChecklist();
         }
 
+        // Detecta colagem de múltiplas linhas no input e converte cada linha em uma tarefa
+        function onColarTaskChecklist(event) {
+            const clipboardData = event.clipboardData || window.clipboardData;
+            const textoColar = clipboardData ? clipboardData.getData('text') : '';
+
+            // Só intercepta se houver múltiplas linhas
+            const linhas = textoColar.split(/\n/).map(l => l.trim()).filter(l => l.length > 0);
+            if (linhas.length <= 1) return; // deixa o comportamento padrão para linha única
+
+            event.preventDefault(); // bloqueia o paste padrão
+
+            // Monta preview das primeiras 5 tarefas
+            const preview = linhas.slice(0, 5).map((l, i) => `  ${i + 1}. ${l}`).join('\n');
+            const extra = linhas.length > 5 ? `\n  ... e mais ${linhas.length - 5}` : '';
+
+            const confirmar = window.confirm(
+                `Detectei ${linhas.length} tarefa${linhas.length > 1 ? 's' : ''} na lista colada:\n\n${preview}${extra}\n\nDeseja adicionar todas ao checklist?`
+            );
+
+            if (!confirmar) {
+                // Devolve o texto ao campo para o usuário editar manualmente
+                const input = document.getElementById('inputNovaTask');
+                if (input) {
+                    input.value = textoColar.trim();
+                    input.focus();
+                }
+                return;
+            }
+
+            let adicionadas = 0;
+            linhas.forEach(linha => {
+                if (linha) {
+                    checklistItems.push({ texto: linha, feito: false });
+                    adicionadas++;
+                }
+            });
+
+            if (adicionadas > 0) {
+                salvarChecklist();
+                renderChecklist();
+
+                // Feedback visual no input
+                const input = document.getElementById('inputNovaTask');
+                if (input) {
+                    input.value = '';
+                    input.placeholder = `✓ ${adicionadas} tarefa${adicionadas > 1 ? 's adicionadas' : ' adicionada'}!`;
+                    setTimeout(() => {
+                        input.placeholder = 'Cole uma lista ou digite e pressione Enter...';
+                    }, 2500);
+                    input.focus();
+                }
+            }
+        }
+
         function adicionarTaskChecklist() {
             const input = document.getElementById('inputNovaTask');
             if (!input) return;
             const texto = input.value.trim();
             if (!texto) { input.focus(); return; }
 
-            checklistItems.push({ texto: texto, feito: false });
+            // Verifica se o texto digitado tem múltiplas linhas (via quebra manual \n)
+            const linhas = texto.split(/\n/).map(l => l.trim()).filter(l => l.length > 0);
+            if (linhas.length > 1) {
+                linhas.forEach(l => checklistItems.push({ texto: l, feito: false }));
+            } else {
+                checklistItems.push({ texto: texto, feito: false });
+            }
+
             input.value = '';
             salvarChecklist();
             renderChecklist();
