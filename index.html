@@ -471,8 +471,21 @@
         }
 
         .btn-flutuante-anotacoes .icone-fab {
-            font-size: 18px;
-            line-height: 1;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .btn-flutuante-anotacoes .icone-fab svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         .badge-indicador-conteudo {
@@ -683,6 +696,248 @@
             padding: 6px;
             width: 100%;
         }
+
+        /* --- SISTEMA DE ABAS (TEXTO / CHECKLIST) --- */
+        .abas-notas {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 12px;
+        }
+
+        .aba-nota {
+            all: unset;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--cor-texto-sub);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.18s ease;
+        }
+
+        .aba-nota:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .aba-nota.ativa {
+            background: var(--cor-primaria);
+            color: var(--bg-body);
+            border-color: var(--cor-primaria);
+        }
+
+        /* --- PAINEL CHECKLIST --- */
+        .painel-checklist {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            gap: 0;
+        }
+
+        .painel-checklist.visivel {
+            display: flex;
+        }
+
+        .checklist-adicionar {
+            display: flex;
+            gap: 8px;
+            padding: 10px 14px;
+            background: rgba(0,0,0,0.18);
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            flex-shrink: 0;
+        }
+
+        .checklist-adicionar input {
+            flex: 1;
+            background: var(--bg-input);
+            color: var(--cor-destaque);
+            border: 1px solid var(--borda-input);
+            border-radius: 7px;
+            padding: 7px 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12.5px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .checklist-adicionar input:focus {
+            border-color: var(--cor-primaria);
+            box-shadow: 0 0 8px rgba(var(--cor-primaria-rgb), 0.25);
+        }
+
+        .checklist-adicionar button {
+            all: unset;
+            background: var(--cor-primaria);
+            color: var(--bg-body);
+            font-size: 18px;
+            font-weight: 700;
+            width: 32px;
+            height: 32px;
+            border-radius: 7px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: filter 0.2s, transform 0.15s;
+        }
+
+        .checklist-adicionar button:hover {
+            filter: brightness(1.2);
+            transform: scale(1.06);
+        }
+
+        .checklist-lista {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            min-height: 0;
+        }
+
+        .checklist-lista::-webkit-scrollbar {
+            width: 5px;
+        }
+        .checklist-lista::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .checklist-lista::-webkit-scrollbar-thumb {
+            background: rgba(var(--cor-primaria-rgb), 0.35);
+            border-radius: 5px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 9px;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+            group: true;
+        }
+
+        .checklist-item:hover {
+            background: rgba(255,255,255,0.07);
+            border-color: rgba(var(--cor-primaria-rgb), 0.25);
+        }
+
+        .checklist-item.concluida {
+            background: rgba(var(--cor-primaria-rgb), 0.06);
+            border-color: rgba(var(--cor-primaria-rgb), 0.2);
+        }
+
+        .checklist-bolinha {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.25);
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .checklist-item.concluida .checklist-bolinha {
+            background: var(--cor-primaria);
+            border-color: var(--cor-primaria);
+        }
+
+        .checklist-bolinha svg {
+            width: 10px;
+            height: 10px;
+            stroke: var(--bg-body);
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: opacity 0.18s, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+        }
+
+        .checklist-item.concluida .checklist-bolinha svg {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .checklist-texto {
+            flex: 1;
+            font-size: 13px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--cor-destaque);
+            transition: color 0.2s, opacity 0.2s;
+            word-break: break-word;
+        }
+
+        .checklist-item.concluida .checklist-texto {
+            text-decoration: line-through;
+            opacity: 0.45;
+            color: var(--cor-texto-sub);
+        }
+
+        .btn-remover-item {
+            all: unset;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: rgba(239,68,68,0);
+            color: #64748b;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            opacity: 0;
+            transition: all 0.15s;
+        }
+
+        .checklist-item:hover .btn-remover-item {
+            opacity: 1;
+            background: rgba(239,68,68,0.12);
+            color: #ef4444;
+        }
+
+        .btn-remover-item:hover {
+            background: rgba(239,68,68,0.25) !important;
+            transform: scale(1.1);
+        }
+
+        .checklist-vazio {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            gap: 10px;
+            color: var(--cor-texto-sub);
+            font-size: 13px;
+            opacity: 0.6;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .checklist-vazio svg {
+            width: 36px;
+            height: 36px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            opacity: 0.5;
+        }
     </style>
 </head>
 
@@ -794,7 +1049,12 @@
     <div id="widgetAnotacoesFlutuante">
         <!-- Botão Disparador Flutuante (FAB) -->
         <button type="button" id="btnToggleAnotacoes" class="btn-flutuante-anotacoes" onclick="togglePainelAnotacoes()" title="Abrir / Fechar Anotações Rápidas">
-            <span class="icone-fab">📝</span>
+            <span class="icone-fab">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+            </span>
             <span class="texto-fab">Anotações</span>
             <span id="badgeIndicadorAnotacoes" class="badge-indicador-conteudo" style="display: none;" title="Você tem anotações gravadas"></span>
         </button>
@@ -803,30 +1063,63 @@
         <div id="janelaAnotacoesFlutuante" class="janela-flutuante-anotacoes">
             <div class="janela-anotacoes-header">
                 <div class="janela-anotacoes-titulo">
-                    <span>📝</span>
-                    <h3>Minhas Anotações</h3>
-                    <span class="badge-status-salvo" id="badgeStatusSalvo">💾 Salvo</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cor-primaria)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                    <h3>Anotações</h3>
+                    <span class="badge-status-salvo" id="badgeStatusSalvo">● Salvo</span>
+                    <div class="abas-notas">
+                        <button type="button" class="aba-nota ativa" id="abaTxt" onclick="mudarAba('txt')" title="Modo texto livre">Texto</button>
+                        <button type="button" class="aba-nota" id="abaChk" onclick="mudarAba('chk')" title="Modo checklist">Checklist</button>
+                    </div>
                 </div>
-                <button type="button" class="btn-fechar-janela" onclick="fecharPainelAnotacoes()" title="Fechar anotações (Esc)">✖</button>
+                <button type="button" class="btn-fechar-janela" onclick="fecharPainelAnotacoes()" title="Fechar anotações (Esc)"
+                    style="margin-left:auto; flex-shrink:0;">✕</button>
             </div>
 
-            <div class="janela-anotacoes-body">
+            <!-- Painel: Texto Livre -->
+            <div class="janela-anotacoes-body" id="painelTextoNota">
                 <textarea id="campoAnotacoes" class="campo-anotacoes-flutuante"
                     placeholder="Digite suas anotações do dia a dia (IPs, clientes, ramais, protocolos de suporte, testes)...&#10;&#10;Tudo é gravado automaticamente no seu navegador."></textarea>
             </div>
 
-            <div class="janela-anotacoes-footer">
+            <!-- Painel: Checklist -->
+            <div class="janela-anotacoes-body painel-checklist" id="painelChecklistNota" style="padding:0; overflow:hidden;">
+                <div class="checklist-adicionar">
+                    <input type="text" id="inputNovaTask" placeholder="Nova tarefa... (Enter para adicionar)" maxlength="200"
+                        onkeydown="if(event.key==='Enter') adicionarTaskChecklist()">
+                    <button type="button" onclick="adicionarTaskChecklist()" title="Adicionar tarefa">+</button>
+                </div>
+                <div class="checklist-lista" id="listaChecklist">
+                    <div class="checklist-vazio" id="checklistVazio">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="9"/>
+                            <path d="M9 12l2 2 4-4"/>
+                        </svg>
+                        <span>Nenhuma tarefa ainda.<br>Adicione uma acima.</span>
+                    </div>
+                </div>
+                <div class="janela-anotacoes-footer" style="border-top: 1px solid rgba(255,255,255,0.07);">
+                    <span id="contagemChecklist" style="font-size:11px; color:var(--cor-texto-sub);">0 tarefas</span>
+                    <div class="acoes-flutuante-botoes">
+                        <button type="button" class="btn-secundario-flutuante" onclick="limparConcluidasChecklist()" title="Remover tarefas concluídas">Limpar Concluídas</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="janela-anotacoes-footer" id="footerTextoNota">
                 <div class="anotacoes-meta-flutuante">
-                    <span id="contagemAnotacoes">0 caracteres • 0 linhas</span>
+                    <span id="contagemAnotacoes">0 chars • 0 linhas</span>
                     <span id="ultimaModificacaoAnotacoes" class="ultima-modificacao"></span>
                 </div>
                 <div class="acoes-flutuante-botoes">
-                    <button type="button" class="btn-secundario-flutuante" onclick="baixarAnotacoesTxt()" title="Baixar anotações em arquivo .txt">📥 .txt</button>
-                    <button type="button" class="btn-secundario-flutuante" onclick="limparAnotacoes()" title="Limpar todas as anotações">🗑️ Limpar</button>
+                    <button type="button" class="btn-secundario-flutuante" onclick="baixarAnotacoesTxt()" title="Baixar .txt">↓ .txt</button>
+                    <button type="button" class="btn-secundario-flutuante" id="btnLimparNota" onclick="limparAnotacoes()" title="Limpar todas as anotações">Limpar</button>
                     <button type="button" class="btn-copiar-flutuante" onclick="copiarAnotacoes()">Copiar</button>
                 </div>
             </div>
-            <span id="msgAnotacoes" class="copied-msg-flutuante">✓ Anotações copiadas com sucesso!</span>
+            <span id="msgAnotacoes" class="copied-msg-flutuante">✓ Copiado com sucesso!</span>
         </div>
     </div>
 
@@ -1395,14 +1688,27 @@ Endereço de instalação:`
 
         function limparAnotacoes() {
             const campo = document.getElementById('campoAnotacoes');
-            if (!campo || !campo.value.trim()) return;
+            if (!campo) return;
+            if (!campo.value.trim()) {
+                campo.focus();
+                return;
+            }
 
-            if (confirm("Tem certeza que deseja apagar todas as suas anotações?")) {
-                campo.value = '';
-                salvarAnotacoes();
-                atualizarMetaAnotacoes('');
-                const elemData = document.getElementById('ultimaModificacaoAnotacoes');
-                if (elemData) elemData.innerText = '';
+            const confirmar = window.confirm('Apagar todas as anotações? Esta ação não pode ser desfeita.');
+            if (!confirmar) return;
+
+            campo.value = '';
+            localStorage.setItem('infor_dados_anotacoes', '');
+            atualizarMetaAnotacoes('');
+
+            const elemData = document.getElementById('ultimaModificacaoAnotacoes');
+            if (elemData) elemData.innerText = '';
+
+            const badge = document.getElementById('badgeStatusSalvo');
+            if (badge) {
+                badge.style.opacity = '1';
+                badge.style.transform = 'scale(1.05)';
+                setTimeout(() => { badge.style.transform = 'scale(1)'; }, 200);
             }
         }
 
@@ -1448,10 +1754,144 @@ Endereço de instalação:`
             });
         }
 
+        // ==========================================
+        // SISTEMA DE ABAS: TEXTO / CHECKLIST
+        // ==========================================
+        let abaAtiva = 'txt'; // 'txt' ou 'chk'
+
+        function mudarAba(aba) {
+            abaAtiva = aba;
+            const painelTxt = document.getElementById('painelTextoNota');
+            const painelChk = document.getElementById('painelChecklistNota');
+            const footerTxt = document.getElementById('footerTextoNota');
+            const abaTxt = document.getElementById('abaTxt');
+            const abaChk = document.getElementById('abaChk');
+
+            if (aba === 'txt') {
+                painelTxt.style.display = 'flex';
+                painelChk.style.display = 'none';
+                if (footerTxt) footerTxt.style.display = 'flex';
+                abaTxt.classList.add('ativa');
+                abaChk.classList.remove('ativa');
+                const campo = document.getElementById('campoAnotacoes');
+                if (campo) campo.focus();
+            } else {
+                painelTxt.style.display = 'none';
+                painelChk.style.display = 'flex';
+                if (footerTxt) footerTxt.style.display = 'none';
+                abaTxt.classList.remove('ativa');
+                abaChk.classList.add('ativa');
+                document.getElementById('inputNovaTask').focus();
+            }
+        }
+
+        // ==========================================
+        // CHECKLIST LOGIC
+        // ==========================================
+        let checklistItems = [];
+
+        function salvarChecklist() {
+            localStorage.setItem('infor_dados_checklist', JSON.stringify(checklistItems));
+        }
+
+        function carregarChecklist() {
+            try {
+                const salvo = localStorage.getItem('infor_dados_checklist');
+                if (salvo) checklistItems = JSON.parse(salvo);
+            } catch (e) { checklistItems = []; }
+            renderChecklist();
+        }
+
+        function atualizarContagemChecklist() {
+            const total = checklistItems.length;
+            const concluidas = checklistItems.filter(i => i.feito).length;
+            const elem = document.getElementById('contagemChecklist');
+            if (elem) elem.textContent = `${concluidas}/${total} concluídas`;
+
+            // Badge indicador: mostra se há itens no checklist OU no texto
+            const campo = document.getElementById('campoAnotacoes');
+            const temTexto = campo && campo.value.trim().length > 0;
+            const temChecklist = checklistItems.length > 0;
+            const badge = document.getElementById('badgeIndicadorAnotacoes');
+            if (badge) badge.style.display = (temTexto || temChecklist) ? 'block' : 'none';
+        }
+
+        function renderChecklist() {
+            const lista = document.getElementById('listaChecklist');
+            const vazio = document.getElementById('checklistVazio');
+            if (!lista) return;
+
+            // Remove itens antigos, mantém o placeholder de vazio
+            const itensAntigos = lista.querySelectorAll('.checklist-item');
+            itensAntigos.forEach(el => el.remove());
+
+            if (checklistItems.length === 0) {
+                if (vazio) vazio.style.display = 'flex';
+                atualizarContagemChecklist();
+                return;
+            }
+            if (vazio) vazio.style.display = 'none';
+
+            checklistItems.forEach((item, idx) => {
+                const div = document.createElement('div');
+                div.className = 'checklist-item' + (item.feito ? ' concluida' : '');
+                div.dataset.idx = idx;
+                div.onclick = () => toggleTaskChecklist(idx);
+
+                div.innerHTML = `
+                    <span class="checklist-bolinha">
+                        <svg viewBox="0 0 12 12">
+                            <polyline points="2,6 5,9 10,3"/>
+                        </svg>
+                    </span>
+                    <span class="checklist-texto">${item.texto.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</span>
+                    <button class="btn-remover-item" onclick="event.stopPropagation(); removerItemChecklist(${idx})" title="Remover tarefa">✕</button>
+                `;
+                lista.appendChild(div);
+            });
+
+            atualizarContagemChecklist();
+        }
+
+        function adicionarTaskChecklist() {
+            const input = document.getElementById('inputNovaTask');
+            if (!input) return;
+            const texto = input.value.trim();
+            if (!texto) { input.focus(); return; }
+
+            checklistItems.push({ texto: texto, feito: false });
+            input.value = '';
+            salvarChecklist();
+            renderChecklist();
+            input.focus();
+        }
+
+        function toggleTaskChecklist(idx) {
+            if (checklistItems[idx] === undefined) return;
+            checklistItems[idx].feito = !checklistItems[idx].feito;
+            salvarChecklist();
+            renderChecklist();
+        }
+
+        function removerItemChecklist(idx) {
+            checklistItems.splice(idx, 1);
+            salvarChecklist();
+            renderChecklist();
+        }
+
+        function limparConcluidasChecklist() {
+            const antes = checklistItems.length;
+            checklistItems = checklistItems.filter(i => !i.feito);
+            if (checklistItems.length === antes) return;
+            salvarChecklist();
+            renderChecklist();
+        }
+
         // Executa a inicialização do tema e das anotações
         window.addEventListener('DOMContentLoaded', () => {
             restaurarTemaSalvo();
             carregarAnotacoesSalvas();
+            carregarChecklist();
         });
     </script>
 
