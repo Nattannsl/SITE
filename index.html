@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Operações | infor.dados</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <script>
+        // Carrega o tema imediatamente para evitar qualquer piscada de cor (FOUC)
+        (function() {
+            try {
+                const salvo = localStorage.getItem('infor_dados_tema');
+                if (salvo) {
+                    const dados = JSON.parse(salvo);
+                    const r = document.documentElement.style;
+                    if (dados.tipo === 'preset' && dados.valores) {
+                        const v = dados.valores;
+                        r.setProperty('--cor-primaria', v.primaria);
+                        r.setProperty('--cor-primaria-rgb', v.rgb);
+                        r.setProperty('--cor-destaque', v.destaque);
+                        r.setProperty('--bg-body', v.body);
+                        r.setProperty('--bg-card-ini', v.cardIni);
+                        r.setProperty('--bg-card-fim', v.cardFim);
+                        r.setProperty('--bg-botao', v.botao);
+                        r.setProperty('--bg-input', v.input);
+                    } else if (dados.tipo === 'custom' && dados.valores) {
+                        const v = dados.valores;
+                        for (const k in v) {
+                            r.setProperty(k, v[k]);
+                        }
+                    }
+                }
+            } catch (e) {}
+        })();
+    </script>
+
+    <style>
+        :root {
+            --cor-primaria: #00a859;
+            --cor-primaria-rgb: 0, 168, 89;
+            --cor-destaque: #00ff88;
+            --bg-body: #121816;
+            --bg-card-ini: #1b2622;
+            --bg-card-fim: #0d1210;
+            --bg-botao: #1f2c27;
+            --bg-input: #0a0e0d;
+            --borda-card: var(--cor-primaria);
+            --borda-botao: var(--cor-primaria);
+            --borda-input: #333333;
+            --sombra-card: rgba(var(--cor-primaria-rgb), 0.2);
+            --cor-texto: #ffffff;
+            --cor-texto-sub: #aaaaaa;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--cor-texto);
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* --- CABEÇALHO MODERNO --- */
+        header {
+            background-color: #ffffff;
+            color: #333;
+            padding: 0 40px;
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .topo-inferior {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 70px;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding: 10px 0;
+        }
+
+        .logo-texto {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--cor-primaria);
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color 0.3s ease;
+        }
+
+        /* --- SELETOR DE CORES DO SISTEMA --- */
+        .controle-tema {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: #f8fafc;
+            padding: 6px 16px;
+            border-radius: 9999px;
+            border: 1px solid #e2e8f0;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);
+        }
+
+        .controle-tema-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            user-select: none;
+        }
+
+        .lista-paletas {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-tema {
+            all: unset;
+            width: 24px;
+            height: 24px;
+            border-radius: 50% !important;
+            border: 2px solid #ffffff !important;
+            box-shadow: 0 0 0 1px #cbd5e1;
+            cursor: pointer;
+            padding: 0 !important;
+            margin: 0 !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease !important;
+            position: relative;
+        }
+
+        .btn-tema:hover {
+            transform: scale(1.22);
+            box-shadow: 0 0 0 2px var(--cor-primaria), 0 3px 8px rgba(0,0,0,0.2) !important;
+            background-color: initial !important;
+            color: initial !important;
+        }
+
+        .btn-tema.ativo {
+            transform: scale(1.18);
+            box-shadow: 0 0 0 2px #0f172a, 0 0 10px rgba(0,0,0,0.35) !important;
+        }
+
+        .btn-tema.ativo::after {
+            content: "✓";
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 800;
+            line-height: 1;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+        }
+
+        /* Seletor Customizado (Color Picker) */
+        .seletor-custom-wrapper {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .btn-custom-cor {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: conic-gradient(from 180deg, #ff0000, #ff8800, #ffff00, #00ff88, #00d4ff, #0070f3, #a855f7, #ec4899, #ff0000);
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 0 1px #cbd5e1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-custom-cor:hover {
+            transform: scale(1.22);
+            box-shadow: 0 0 0 2px var(--cor-primaria), 0 3px 8px rgba(0,0,0,0.2);
+        }
+
+        .btn-custom-cor.ativo {
+            transform: scale(1.18);
+            box-shadow: 0 0 0 2px #0f172a, 0 0 10px rgba(0,0,0,0.35);
+        }
+
+        .btn-custom-cor.ativo::after {
+            content: "★";
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 900;
+            line-height: 1;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+            pointer-events: none;
+            position: absolute;
+        }
+
+        .btn-custom-cor input[type="color"] {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            width: 50px;
+            height: 50px;
+            opacity: 0;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-reset-tema {
+            all: unset;
+            width: 26px;
+            height: 26px;
+            border-radius: 50% !important;
+            color: #64748b;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.25s ease, color 0.2s ease, background 0.2s ease !important;
+            margin-left: 2px !important;
+        }
+
+        .btn-reset-tema:hover {
+            color: #0f172a !important;
+            background: #e2e8f0 !important;
+            transform: rotate(-180deg) !important;
+        }
+
+        /* --- BANNER PRINCIPAL --- */
+        .banner-principal {
+            max-width: 1250px;
+            margin: 30px auto;
+            background: linear-gradient(135deg, var(--bg-card-ini) 0%, var(--bg-card-fim) 100%);
+            border: 2px solid var(--borda-card);
+            border-radius: 16px;
+            padding: 40px;
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            box-shadow: 0 12px 35px var(--sombra-card);
+            transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .banner-texto {
+            flex: 1;
+        }
+
+        .banner-texto h1 {
+            font-size: 36px;
+            color: #fff;
+            margin-bottom: 15px;
+            line-height: 1.2;
+            font-weight: 800;
+        }
+
+        .banner-texto h1 span {
+            color: var(--cor-primaria);
+            transition: color 0.3s ease;
+        }
+
+        .banner-texto p {
+            color: var(--cor-texto-sub);
+            font-size: 15px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        /* Área de Ações e Botões */
+        .botoes-grid {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: var(--bg-botao);
+            color: #fff;
+            border: 1px solid var(--borda-botao);
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s, transform 0.15s, box-shadow 0.15s;
+        }
+
+        button:hover {
+            background-color: var(--cor-primaria);
+            color: var(--bg-body);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(var(--cor-primaria-rgb), 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Estilos dos Formulários Especiais */
+        .painel-editor {
+            flex: 1.2;
+            width: 100%;
+        }
+
+        .campo-grupo {
+            margin-bottom: 12px;
+        }
+
+        .campo-grupo label {
+            display: block;
+            font-size: 13px;
+            color: var(--cor-destaque);
+            margin-bottom: 5px;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            background-color: var(--bg-input);
+            color: var(--cor-destaque);
+            border: 1px solid var(--borda-input);
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'JetBrains Mono', 'Courier New', Courier, monospace;
+            font-size: 13px;
+            transition: background-color 0.3s ease, border-color 0.2s ease, color 0.3s ease, box-shadow 0.2s ease;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            border-color: var(--cor-primaria);
+            box-shadow: 0 0 12px rgba(var(--cor-primaria-rgb), 0.35);
+            outline: none;
+        }
+
+        textarea {
+            height: 220px;
+            resize: vertical;
+        }
+
+        .seletor-tipo-chamado {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            background: var(--bg-input);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--borda-botao);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .seletor-tipo-chamado button {
+            flex: 1;
+            padding: 8px;
+            font-size: 13px;
+            background: var(--bg-botao);
+            border-color: var(--borda-botao);
+        }
+
+        .seletor-tipo-chamado button.ativo {
+            background-color: var(--cor-primaria);
+            color: var(--bg-body);
+            border-color: var(--cor-destaque);
+            font-weight: 700;
+        }
+
+        .acoes-inferiores {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            gap: 10px;
+        }
+
+        .btn-formatar {
+            background-color: var(--bg-botao);
+            color: var(--cor-destaque);
+            border: 1px solid var(--cor-destaque);
+        }
+
+        .btn-formatar:hover {
+            background-color: var(--cor-destaque);
+            color: var(--bg-body);
+        }
+
+        .btn-copiar {
+            background-color: var(--cor-primaria);
+            color: var(--bg-body);
+            border: none;
+            font-weight: bold;
+        }
+
+        .btn-copiar:hover {
+            filter: brightness(1.15);
+            color: #fff;
+        }
+
+        .copied-msg {
+            color: var(--cor-destaque);
+            font-size: 13px;
+            font-weight: bold;
+            display: none;
+            transition: color 0.3s ease;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- CABEÇALHO -->
+    <header>
+        <div class="topo-inferior">
+            <div class="logo-texto">infor.dados</div>
+
+            <!-- CONTROLE DE CORES / TEMAS -->
+            <div class="controle-tema">
+                <span class="controle-tema-label">🎨 Cores</span>
+                <div class="lista-paletas">
+                    <button type="button" class="btn-tema ativo" data-tema="verde" title="Verde Esmeralda (Padrão)" style="background-color: #00a859;" onclick="selecionarTema('verde')"></button>
+                    <button type="button" class="btn-tema" data-tema="azul" title="Azul Cibernético" style="background-color: #0070f3;" onclick="selecionarTema('azul')"></button>
+                    <button type="button" class="btn-tema" data-tema="roxo" title="Roxo Cyberpunk" style="background-color: #8b5cf6;" onclick="selecionarTema('roxo')"></button>
+                    <button type="button" class="btn-tema" data-tema="laranja" title="Laranja Sunset" style="background-color: #f97316;" onclick="selecionarTema('laranja')"></button>
+                    <button type="button" class="btn-tema" data-tema="vermelho" title="Vermelho Carmim" style="background-color: #ef4444;" onclick="selecionarTema('vermelho')"></button>
+                    <button type="button" class="btn-tema" data-tema="ciano" title="Ciano Matrix" style="background-color: #06b6d4;" onclick="selecionarTema('ciano')"></button>
+                    <button type="button" class="btn-tema" data-tema="dourado" title="Dourado Cyber" style="background-color: #eab308;" onclick="selecionarTema('dourado')"></button>
+
+                    <!-- Seletor de Qualquer Cor (Color Picker) -->
+                    <div class="seletor-custom-wrapper" title="Escolha qualquer cor personalizada">
+                        <div class="btn-custom-cor" id="btnCustomCor">
+                            <input type="color" id="inputCorCustom" onchange="selecionarCorLivre(this.value)" oninput="selecionarCorLivre(this.value)" value="#00a859">
+                        </div>
+                    </div>
+
+                    <!-- Botão Reset -->
+                    <button type="button" class="btn-reset-tema" title="Restaurar cor padrão" onclick="selecionarTema('verde')">↺</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- BANNER COM PAINEL DE BOTÕES E EDITOR -->
+    <div class="banner-principal">
+        <div class="banner-texto">
+            <h1>Tecnologia <span>no seu ritmo</span></h1>
+            <p>Selecione uma opção abaixo para carregar as especificações técnicas de TI ou extrair modelos de dados
+                prontos.</p>
+
+            <!-- Botões de Opções -->
+            <div class="botoes-grid">
+                <button onclick="carregarConteudo('firewall')">Firewall Informações</button>
+                <button onclick="carregarConteudo('kipNovo')">Modelo KIP NOVO</button>
+                <button onclick="carregarConteudo('glpiKipNovo')">GLPI KIP NOVO</button>
+                <button onclick="carregarConteudo('chamadoOperadora')">Chamado Operadora</button>
+                <button onclick="carregarConteudo('idIpTelefone')">ID IP Telefone (TIP 125i)</button>
+                <button onclick="carregarConteudo('checklist')">Checklist de Implantação</button>
+            </div>
+        </div>
+
+        <div class="painel-editor">
+            <!-- Painel Especial para Chamados de Operadora (Campos Separados + Seleção de Entrada/Saída) -->
+            <div id="painelOperadora" style="display: none;">
+                <div class="seletor-tipo-chamado">
+                    <button id="btnEntrada" class="ativo" onclick="selecionarTipo('entrada')">📥
+                        ENTRADA</button>
+                    <button id="btnSaida" onclick="selecionarTipo('saida')">📤 SAÍDA</button>
+                </div>
+
+                <div class="campo-grupo">
+                    <label id="lblDestino" for="inputDestino">Número Alvo / Destino:</label>
+                    <input type="text" id="inputDestino" placeholder="Ex: 1636258150">
+                </div>
+
+                <div class="campo-grupo">
+                    <label id="lblOrigens" for="inputOrigens">Testes (Cole os dados brutos):</label>
+                    <textarea id="inputOrigens" style="height: 120px;"
+                        placeholder="Exemplo:&#10;16 99628-0832 tim 8h41&#10;16 99338-4116 vivo 8h42&#10;16 98823-6872 vivo 8h24"></textarea>
+                </div>
+
+                <div class="campo-grupo">
+                    <label for="inputProblema">Problemas / Informações Complementares:</label>
+                    <input type="text" id="inputProblema"
+                        value="(Número não existe) | (Número digitado está incorreto) | (Ligação se encerra direto)">
+                </div>
+            </div>
+
+            <!-- Editor Padrão (utilizado nos outros modelos) -->
+            <div id="painelPadrao">
+                <textarea id="editor"
+                    placeholder="Clique em uma das opções ao lado para carregar o modelo ou as especificações técnicas aqui..."></textarea>
+            </div>
+
+            <div class="acoes-inferiores">
+                <span id="msg" class="copied-msg">✓ Texto copiado com sucesso!</span>
+                <div>
+                    <button id="btnOrganizarOp" class="btn-formatar" style="display:none;"
+                        onclick="gerarChamadoOperadora()">⚡ Gerar RLT Formatado</button>
+                    <button class="btn-copiar" onclick="copiarTexto()">Copiar Texto</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let tipoChamado = 'entrada'; // padrão: entrada
+
+        const conteudos = {
+            firewall: `ESPECIFICAÇÕES DO FIREWALL:
+Verifique a configuração das rotas de saída da sua conexão à internet. Libere o tráfego UDP na porta 5060 para comunicação SIP e permita o tráfego UDP nas portas 10000 a 20000 para áudio. Por questões de segurança, ajuste as regras do firewall para direcionar o tráfego exclusivamente ao nosso IP: 45.4.32.145`,
+
+            kipNovo: `EMPRESA:              - SERVIDOR:   - CÓD: 
+
+Rota Criada e Apontada (SAIDAS_SBC)
+Alias Criados
+Regras Criadas
+Grupo de Captura Criado (GRUP_CAPTURA)
+Grupo de Chamada Criado (GRUP_CHAMADA)
+
+QNTD. RAMAIS:
+
+DDR cadastrado (        )
+
+QRD. RAMAIS (   ) + 1 Ramal de teste criados
+SENHA: 
+DNS: 
+
+USUÁRIO CRIADO:
+LOGIN: 
+SENHA: `,
+
+            glpiKipNovo: `CLIENTE NOVO_KIP_[EMPRESA]
+
+[EMPRESA][+COD]
+
+CONTATO(s): 
+
+PRODUTOS:
+KIP | RAMAL CONSUMÍVEL -
+KIP | SERVIÇO NÚMERO MÓVEL (DID)
+KIP | PORTABILIDADE (XX XXXX-XXXX)
+KIP | NÚMERO NOVO   (XX XXXX-XXXX)
+
+Considerações:`,
+
+            idIpTelefone: `IDENTIFICAÇÃO IP DO TELEFONE : (TIP 125i)
+
+Botão: Menu
+Opção: Status
+Opção: Gerais
+
+Informações gerais
+Me informe o numero que aparece em:
+1-IPV4   000.000.0.000
+Com todos os Pontos (  ...  ) Por favor. 
+
+Ou se possível, me enviar uma foto da numeração.`,
+
+            checklist: `CHECKLIST DE IMPLANTAÇÃO:
+Razão Social:             (Serv.) 
+CNPJ: 
+Técnico Responsável pela Implantação: 
+Contato Principal: 
+Vendedor: 
+Data Prevista para Implantação:
+OBS: 
+----------------------------------------
+1. Em quais dispositivos os ramais serão configurados?
+(  ) Computador/Notbook
+(  ) Softphone celular
+(  ) Telefone
+
+2. Será implementado o sistema de atendimento automatizado (URA)?
+(  ) Sim
+(  ) Não
+
+3. O áudio para a URA será fornecido pelo cliente ou nós?
+(  ) Cliente
+(  ) Empresa
+
+4. Para qual Ramal as ligações serão transferidas?
+ 
+5. Os equipamentos de telefonia estão prontos para a implantação?
+(  ) Sim
+(  ) Não
+
+6. Qual é o horário de funcionamento da empresa?
+ 
+7. Quantos links de internet estão contratados e qual a velocidade de cada um? (Especificar a quantidade e a velocidade)
+ 
+
+8. A empresa possui IP fixo?
+(  ) Sim
+(  ) Não
+(Especificar):
+Teste de Velocidade:
+(Anexar resultados de teste)
+
+9. A empresa possui firewall; Mikrotik? Se sim, qual modelo? 
+
+10. Print do ping da rede do cliente.
+(Print do teste de ping)
+
+11. Caso o cliente possua mais de dois números, qual número será configurado para a BINA?
+Número: 
+
+12. (Se possuir mais de 07 Ramais, será presencial.) 
+(  ) Presencial
+(  ) Remota
+Endereço de instalação:`
+        };
+
+        function carregarConteudo(tipo) {
+            const painelOperadora = document.getElementById('painelOperadora');
+            const painelPadrao = document.getElementById('painelPadrao');
+            const btnOrganizarOp = document.getElementById('btnOrganizarOp');
+            const editor = document.getElementById('editor');
+
+            if (tipo === 'chamadoOperadora') {
+                painelOperadora.style.display = 'block';
+                painelPadrao.style.display = 'none';
+                btnOrganizarOp.style.display = 'inline-block';
+            } else {
+                painelOperadora.style.display = 'none';
+                painelPadrao.style.display = 'block';
+                btnOrganizarOp.style.display = 'none';
+                if (conteudos[tipo]) {
+                    editor.value = conteudos[tipo];
+                }
+            }
+        }
+
+        function selecionarTipo(tipo) {
+            tipoChamado = tipo;
+            const btnEntrada = document.getElementById('btnEntrada');
+            const btnSaida = document.getElementById('btnSaida');
+
+            if (tipo === 'entrada') {
+                btnEntrada.classList.add('ativo');
+                btnSaida.classList.remove('ativo');
+                document.getElementById('lblDestino').innerText = "Número Destino (Recebe a ligação):";
+                document.getElementById('lblOrigens').innerText = "Origens dos Testes (Quem ligou):";
+            } else {
+                btnSaida.classList.add('ativo');
+                btnEntrada.classList.remove('ativo');
+                document.getElementById('lblDestino').innerText = "Número Origem (Ramal/Linha de Saída):";
+                document.getElementById('lblOrigens').innerText = "Destinos dos Testes (Números chamados):";
+            }
+        }
+
+        function processarLinhasTestes(textoBruto, rotuloLinha) {
+            const linhas = textoBruto.split('\n');
+            let resultados = [];
+
+            const regexTelefone = /(\(?\d{2}\)?\s?\d{4,5}[-\s]?\d{4}|\d{8,11})/;
+            const regexHora = /(\d{1,2}[h:]\d{0,2}|\d{1,2}\s?h)/i;
+            const operadoras = ['vivo', 'claro', 'tim', 'oi', 'algar', 'embratel', 'nextel'];
+
+            linhas.forEach(linha => {
+                if (!linha.trim()) return;
+                let lLower = linha.toLowerCase();
+
+                let numMatch = linha.match(regexTelefone);
+                let horaMatch = linha.match(regexHora);
+                let opEncontrada = 'N/I';
+
+                operadoras.forEach(op => {
+                    if (lLower.includes(op)) opEncontrada = op.toUpperCase();
+                });
+
+                if (numMatch) {
+                    let num = numMatch[0].trim();
+                    let hora = horaMatch ? horaMatch[0].trim() : 'N/I';
+                    resultados.push(`${rotuloLinha}: ${num} - ${opEncontrada} - ${hora}`);
+                } else {
+                    // Caso cole uma linha fora do padrão, mantém o texto básico
+                    resultados.push(`${rotuloLinha}: ${linha.trim()}`);
+                }
+            });
+
+            if (resultados.length === 0) {
+                resultados.push(`${rotuloLinha}: [numero] - [OPERADORA] - [h]`);
+                resultados.push(`${rotuloLinha}: [numero] - [OPERADORA] - [h]`);
+            }
+
+            return resultados.join('\n');
+        }
+
+        function gerarChamadoOperadora() {
+            const destino = document.getElementById('inputDestino').value.trim() || '[NÚMERO]';
+            const origensBrutas = document.getElementById('inputOrigens').value.trim();
+            const problemaRaw = document.getElementById('inputProblema').value.trim();
+
+            // Formata problemas para ficarem em linhas separadas caso estejam separados por "|"
+            let problemaFormatado = problemaRaw.split('|').map(p => p.trim()).join('\n');
+
+            let cabecalho = '';
+            let corpoTestes = '';
+            let campoSecundario = '';
+
+            if (tipoChamado === 'entrada') {
+                cabecalho = `Ao ligar para o número destino ocorre os seguintes problemas abaixo: (Segue os testes)\n`;
+                corpoTestes = processarLinhasTestes(origensBrutas, 'ORIGEM');
+                campoSecundario = `DESTINO: ${destino}`;
+            } else {
+                cabecalho = `Ao realizar ligações a partir da origem ocorrem os seguintes problemas abaixo: (Segue os testes)\n`;
+                campoSecundario = `ORIGEM: ${destino}`;
+                corpoTestes = processarLinhasTestes(origensBrutas, 'DESTINO');
+            }
+
+            let resultadoFinal = `${cabecalho}\n${corpoTestes}\n\n${campoSecundario}\n\nPROBLEMA/INFO. COMPLEMENTARES:\n${problemaFormatado}`;
+
+            // Alterna para o editor principal para exibir o resultado final gerado
+            document.getElementById('painelOperadora').style.display = 'none';
+            document.getElementById('painelPadrao').style.display = 'block';
+            document.getElementById('btnOrganizarOp').style.display = 'none';
+
+            const editor = document.getElementById('editor');
+            editor.value = resultadoFinal;
+        }
+
+        async function copiarTexto() {
+            let textoParaCopiar = "";
+
+            // Se o painel da operadora estiver visível no momento em que clicar em copiar, gera o texto antes
+            if (document.getElementById('painelOperadora').style.display === 'block') {
+                gerarChamadoOperadora();
+            }
+
+            const editor = document.getElementById('editor');
+            textoParaCopiar = editor.value;
+
+            if (!textoParaCopiar.trim()) {
+                alert("Não há texto para copiar!");
+                return;
+            }
+
+            try {
+                await navigator.clipboard.writeText(textoParaCopiar);
+                const msg = document.getElementById('msg');
+                msg.style.display = 'block';
+                setTimeout(() => {
+                    msg.style.display = 'none';
+                }, 3000);
+            } catch (err) {
+                alert("Erro ao copiar o texto.");
+            }
+        }
+
+        // ==========================================
+        // SISTEMA DE TEMAS E PERSONALIZAÇÃO DE CORES
+        // ==========================================
+        const temasPredefinidos = {
+            verde: {
+                nome: 'Verde Esmeralda',
+                primaria: '#00a859',
+                rgb: '0, 168, 89',
+                destaque: '#00ff88',
+                body: '#121816',
+                cardIni: '#1b2622',
+                cardFim: '#0d1210',
+                botao: '#1f2c27',
+                input: '#0a0e0d'
+            },
+            azul: {
+                nome: 'Azul Cibernético',
+                primaria: '#0070f3',
+                rgb: '0, 112, 243',
+                destaque: '#00d4ff',
+                body: '#0a111a',
+                cardIni: '#111e2f',
+                cardFim: '#080e16',
+                botao: '#132439',
+                input: '#060b12'
+            },
+            roxo: {
+                nome: 'Roxo Cyberpunk',
+                primaria: '#8b5cf6',
+                rgb: '139, 92, 246',
+                destaque: '#c084fc',
+                body: '#130f1d',
+                cardIni: '#201633',
+                cardFim: '#0d0916',
+                botao: '#291b42',
+                input: '#0a0612'
+            },
+            laranja: {
+                nome: 'Laranja Sunset',
+                primaria: '#f97316',
+                rgb: '249, 115, 22',
+                destaque: '#fb923c',
+                body: '#18110b',
+                cardIni: '#291b10',
+                cardFim: '#110a05',
+                botao: '#352213',
+                input: '#0d0703'
+            },
+            vermelho: {
+                nome: 'Vermelho Carmim',
+                primaria: '#ef4444',
+                rgb: '239, 68, 68',
+                destaque: '#f87171',
+                body: '#180d10',
+                cardIni: '#2a1318',
+                cardFim: '#110609',
+                botao: '#36161d',
+                input: '#0d0406'
+            },
+            ciano: {
+                nome: 'Ciano Matrix',
+                primaria: '#06b6d4',
+                rgb: '6, 182, 212',
+                destaque: '#38bdf8',
+                body: '#091418',
+                cardIni: '#10222a',
+                cardFim: '#060e12',
+                botao: '#142d38',
+                input: '#04090d'
+            },
+            dourado: {
+                nome: 'Dourado Cyber',
+                primaria: '#eab308',
+                rgb: '234, 179, 8',
+                destaque: '#fef08a',
+                body: '#161408',
+                cardIni: '#27220c',
+                cardFim: '#100e04',
+                botao: '#352e0f',
+                input: '#0c0b02'
+            }
+        };
+
+        function hexParaRGB(hex) {
+            hex = hex.replace('#', '');
+            if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+            const r = parseInt(hex.substring(0, 2), 16) || 0;
+            const g = parseInt(hex.substring(2, 4), 16) || 0;
+            const b = parseInt(hex.substring(4, 6), 16) || 0;
+            return `${r}, ${g}, ${b}`;
+        }
+
+        function hexParaHSL(hex) {
+            hex = hex.replace('#', '');
+            if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+            const r = (parseInt(hex.substring(0, 2), 16) || 0) / 255;
+            const g = (parseInt(hex.substring(2, 4), 16) || 0) / 255;
+            const b = (parseInt(hex.substring(4, 6), 16) || 0) / 255;
+
+            const max = Math.max(r, g, b);
+            const min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+
+            if (max === min) {
+                h = s = 0;
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                h /= 6;
+            }
+            return {
+                h: Math.round(h * 360),
+                s: Math.round(s * 100),
+                l: Math.round(l * 100)
+            };
+        }
+
+        function aplicarEstilosCSS(valores) {
+            const r = document.documentElement.style;
+            r.setProperty('--cor-primaria', valores.primaria);
+            r.setProperty('--cor-primaria-rgb', valores.rgb);
+            r.setProperty('--cor-destaque', valores.destaque);
+            r.setProperty('--bg-body', valores.body);
+            r.setProperty('--bg-card-ini', valores.cardIni);
+            r.setProperty('--bg-card-fim', valores.cardFim);
+            r.setProperty('--bg-botao', valores.botao);
+            r.setProperty('--bg-input', valores.input);
+            r.setProperty('--borda-card', valores.primaria);
+            r.setProperty('--borda-botao', valores.primaria);
+            r.setProperty('--sombra-card', `rgba(${valores.rgb}, 0.22)`);
+        }
+
+        function selecionarTema(idTema, salvar = true) {
+            const tema = temasPredefinidos[idTema];
+            if (!tema) return;
+
+            aplicarEstilosCSS(tema);
+
+            // Atualiza botões ativos
+            document.querySelectorAll('.btn-tema').forEach(btn => {
+                btn.classList.toggle('ativo', btn.dataset.tema === idTema);
+            });
+            const btnCustomCor = document.getElementById('btnCustomCor');
+            if (btnCustomCor) btnCustomCor.classList.remove('ativo');
+
+            const inputCorCustom = document.getElementById('inputCorCustom');
+            if (inputCorCustom) inputCorCustom.value = tema.primaria;
+
+            if (salvar) {
+                localStorage.setItem('infor_dados_tema', JSON.stringify({
+                    tipo: 'preset',
+                    id: idTema,
+                    valores: tema
+                }));
+            }
+        }
+
+        function selecionarCorLivre(hex, salvar = true) {
+            if (!hex || !hex.startsWith('#')) return;
+
+            const rgb = hexParaRGB(hex);
+            const hsl = hexParaHSL(hex);
+
+            // Gera tons escuros harmoniosos e equilibrados derivados da cor escolhida
+            const destaque = `hsl(${hsl.h}, ${Math.min(100, Math.max(60, hsl.s))}%, ${Math.min(75, Math.max(55, hsl.l + 12))}%)`;
+            const body = `hsl(${hsl.h}, ${Math.min(22, Math.max(8, Math.round(hsl.s * 0.22)))}%, 8%)`;
+            const cardIni = `hsl(${hsl.h}, ${Math.min(28, Math.max(10, Math.round(hsl.s * 0.28)))}%, 13%)`;
+            const cardFim = `hsl(${hsl.h}, ${Math.min(22, Math.max(8, Math.round(hsl.s * 0.22)))}%, 6%)`;
+            const botao = `hsl(${hsl.h}, ${Math.min(32, Math.max(12, Math.round(hsl.s * 0.32)))}%, 16%)`;
+            const input = `hsl(${hsl.h}, ${Math.min(22, Math.max(8, Math.round(hsl.s * 0.22)))}%, 4%)`;
+
+            const valores = {
+                primaria: hex,
+                rgb: rgb,
+                destaque: destaque,
+                body: body,
+                cardIni: cardIni,
+                cardFim: cardFim,
+                botao: botao,
+                input: input
+            };
+
+            aplicarEstilosCSS(valores);
+
+            // Remove estado ativo dos presets e ativa o custom
+            document.querySelectorAll('.btn-tema').forEach(btn => btn.classList.remove('ativo'));
+            const btnCustomCor = document.getElementById('btnCustomCor');
+            if (btnCustomCor) btnCustomCor.classList.add('ativo');
+
+            if (salvar) {
+                localStorage.setItem('infor_dados_tema', JSON.stringify({
+                    tipo: 'custom',
+                    hex: hex,
+                    valores: valores
+                }));
+            }
+        }
+
+        function restaurarTemaSalvo() {
+            try {
+                const salvo = localStorage.getItem('infor_dados_tema');
+                if (salvo) {
+                    const dados = JSON.parse(salvo);
+                    if (dados.tipo === 'preset' && dados.id) {
+                        selecionarTema(dados.id, false);
+                        return;
+                    } else if (dados.tipo === 'custom' && dados.hex) {
+                        const inputCorCustom = document.getElementById('inputCorCustom');
+                        if (inputCorCustom) inputCorCustom.value = dados.hex;
+                        selecionarCorLivre(dados.hex, false);
+                        return;
+                    }
+                }
+            } catch (e) {}
+
+            // Padrão: Verde Esmeralda
+            selecionarTema('verde', false);
+        }
+
+        // Executa a inicialização do tema
+        window.addEventListener('DOMContentLoaded', restaurarTemaSalvo);
+    </script>
+
+</body>
+
+</html>
